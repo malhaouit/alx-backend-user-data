@@ -6,6 +6,7 @@ from typing import List
 import logging
 import csv
 import mysql.connector
+from mysql.connector import MySQLConnection
 import os
 
 
@@ -63,14 +64,14 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-def get_db():
+def get_db() -> MySQLConnection:
     """Get a database connection using environment variables.
     """
     # Retrieve the environment variables with default values
-    host_name = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
-    user_name = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
-    user_password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
-    db_name = os.getenv('PERSONAL_DATA_DB_NAME')
+    host_name: str = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    user_name: str = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    user_password: str = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    db_name: str = os.getenv('PERSONAL_DATA_DB_NAME')
 
     connection = mysql.connector.connect(
         host=host_name,
