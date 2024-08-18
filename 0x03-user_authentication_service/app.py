@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Basic Flask app for user registration"""
+"""Basic Flask app for user registration
+"""
 from flask import Flask, jsonify, request, abort, make_response
 from flask import redirect, url_for
 from auth import Auth
@@ -17,7 +18,8 @@ def welcome():
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
 def register_user():
-    """Register a new user"""
+    """Register a new user
+    """
     email = request.form.get("email")
     password = request.form.get("password")
 
@@ -30,7 +32,8 @@ def register_user():
 
 @app.route("/sessions", methods=["POST"], strict_slashes=False)
 def login():
-    """Handles user login and creates a session."""
+    """Handles user login and creates a session.
+    """
     email = request.form.get('email')
     password = request.form.get('password')
 
@@ -52,7 +55,8 @@ def login():
 
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
 def logout():
-    """ Handle the DELETE /sessions route to log out a user """
+    """Handle the DELETE /sessions route to log out a user
+    """
     session_id = request.cookies.get("session_id")
 
     if session_id is None:
@@ -66,6 +70,23 @@ def logout():
     AUTH.destroy_session(user.id)
 
     return redirect(url_for('welcome'))
+
+
+@app.route('/profile', methods=['GET'], strict_slashes=False)
+def profile():
+    """Handle the GET /profile route to return a user profile
+    """
+    session_id = request.cookies.get('session_id')
+
+    if session_id is None:
+        abort(403)
+
+    user = AUTH.get_user_from_session_id(session_id)
+
+    if user is None:
+        abort(403)
+
+    return jsonify({"email": user.email}), 200
 
 
 if __name__ == "__main__":
